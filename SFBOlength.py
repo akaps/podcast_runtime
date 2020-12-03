@@ -4,28 +4,39 @@ import re
 from subprocess import Popen, PIPE
 import time
 
+MINUTES_REGEX = r'^ *(\d){1,2}:(\d){2}$'
+HOURS_REGEX = r'^ *(\d){1,2}:(\d){2}:(\d){2}$'
+
 def load_data(uri, file_name):
     podcast_details = subprocess.check_output('w3m -dump https://open.spotify.com/show/5z3G1urniqVGKCNZSQXhX0', shell=True)
     file = open(file_name, 'rw')
     file.writelines(podcast_details)
     file.close()
 
+def pretty_print_time(total_time):
+    hrs = total_time // 360
+    total_time %= 360
+    min = total_time // 60
+    sec = total_time % 60
+    print("total runtime: {:d}:{:02d}:{:02d}".format(hrs, min, sec))
+
+def calculate_time(lines):
+    total_time = 0 #calculate in seconds
+    for line in lines:
+        if re.match(MINUTES_REGEX, line):
+            min, sec = re.match(MINUTES_REGEX, line).groups()
+            total_time += int(min) * 60 + int(sec)
+        if re.match(HOURS_REGEX, line):
+            hr, min, sec = re.match(HOURS_REGEX, line).groups()
+            total_time += int(hr) * 360 + int(min) * 60 + int(sec)
+    return total_time
+
 def main():
-    times = []
-    i = 0
+    file = open("sfbo.txt", "r")
+    lines = file.readlines()
+    file.close()
 
-    #times = sfbo.split()
-
-    file1 = open("sfbo.txt", "r")
-    Lines = file1.readlines()
-
-    for line in Lines:
-        if ":" in line and ": " not in line:
-            times.extend(line)
-            if(line.count(":") == 1):
-                print("00:", end="")
-            line = re.sub(r'(^[ \t]+|[ \t]+(?=:))', '', line, flags=re.M)
-            print(line)
+    pretty_print_time(calculate_time(lines))
 
 """
     # Convert BPM into int
