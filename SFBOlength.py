@@ -1,17 +1,12 @@
-import sys
+from sys import argv
 import subprocess
 import re
-from subprocess import Popen, PIPE
-import time
 
 MINUTES_REGEX = r'^ *(\d){1,2}:(\d){2}$'
 HOURS_REGEX = r'^ *(\d){1,2}:(\d){2}:(\d){2}$'
 
-def load_data(uri, file_name):
-    podcast_details = subprocess.check_output('w3m -dump https://open.spotify.com/show/5z3G1urniqVGKCNZSQXhX0', shell=True)
-    file = open(file_name, 'rw')
-    file.writelines(podcast_details)
-    file.close()
+def load_data(uri):
+    return subprocess.check_output('w3m -dump {uri}'.format(uri=uri), shell=True)
 
 def pretty_print_time(total_time):
     hrs = total_time // 360
@@ -31,10 +26,17 @@ def calculate_time(lines):
             total_time += int(hr) * 360 + int(min) * 60 + int(sec)
     return total_time
 
-def main():
-    file = open("sfbo.txt", "r")
-    lines = file.readlines()
-    file.close()
+def main(argv):
+    lines = []
+    if len(argv) == 1:
+        file = open("sfbo.txt", "r")
+        lines = file.readlines()
+        file.close()
+    if len(argv) == 2:
+        uri = argv[1]
+        print('have a uri')
+        lines = load_data(uri)
+        print(lines)
 
     pretty_print_time(calculate_time(lines))
 
@@ -64,4 +66,4 @@ def main():
     """
 
 if __name__ == "__main__":
-    main()
+    main(argv)
