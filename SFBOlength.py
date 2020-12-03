@@ -1,21 +1,16 @@
-import dbus
-import os
+import sys
 import subprocess
 import re
 from subprocess import Popen, PIPE
 import time
 
+def load_data(uri, file_name):
+    podcast_details = subprocess.check_output('w3m -dump https://open.spotify.com/show/5z3G1urniqVGKCNZSQXhX0', shell=True)
+    file = open(file_name, 'rw')
+    file.writelines(podcast_details)
+    file.close()
+
 def main():
-    # Dump the Spotify's page for SFBO into a variable
-    #sfbo = subprocess.check_output('w3m -dump https://open.spotify.com/show/5z3G1urniqVGKCNZSQXhX0', shell=True)
-
-
-    # Uncomment to print page content
-    #print(sfbo)
-
-    # Convert page content on variable into string
-    #sfbo = str(sfbo)
-
     times = []
     i = 0
 
@@ -40,7 +35,7 @@ def main():
     m = 0
     s = 0
     for i in range(len(times)):
-        
+
         if(times[i].count(":") == 2):
             h += int(times[i].split(":")[0])
             m += int(times[i].split[":"][1].lstrip().split(":")[2])
@@ -56,5 +51,6 @@ def main():
     # Return BPM
     #return BPM
     """
-main()
 
+if __name__ == "__main__":
+    main()
