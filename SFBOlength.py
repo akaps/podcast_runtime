@@ -38,30 +38,5 @@ def main():
 
     pretty_print_time(calculate_time(lines))
 
-"""
-    # Convert BPM into int
-    # sfbo = int(sfbo)
-
-    h = 0
-    m = 0
-    s = 0
-    for i in range(len(times)):
-
-        if(times[i].count(":") == 2):
-            h += int(times[i].split(":")[0])
-            m += int(times[i].split[":"][1].lstrip().split(":")[2])
-            s += int(times[i].split[":"][2].lstrip())
-        else:
-            m += int(times[i].split(":")[0])
-            s += int(times[i].split[":"][2].lstrip())
-
-        print(times[i])
-
-    print(h, m, s)
-
-    # Return BPM
-    #return BPM
-    """
-
 if __name__ == "__main__":
     main()
